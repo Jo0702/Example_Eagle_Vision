@@ -114,7 +114,7 @@ if __name__ == '__main__':
         """
     st.write(instructions)
 
-#     file = st.file_uploader('Upload An Image')
+    file = st.file_uploader('Upload An Image')
     dtype_file_structure_mapping = {
         'All Images': 'consolidated',
         'Images Used To Train The Model': 'train',
@@ -123,8 +123,8 @@ if __name__ == '__main__':
     }
     data_split_names = list(dtype_file_structure_mapping.keys())
 
-#     if file:  # if user uploaded file
-#         img = Image.open(file)
+    if file:  # if user uploaded file
+        img = Image.open(file)
 #         prediction = predict(img, index_to_class_label_dict, model, k=5)
 #         top_prediction = prediction[0][0]
 #         available_images = all_image_files.get(
