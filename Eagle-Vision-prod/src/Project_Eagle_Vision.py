@@ -14,87 +14,87 @@ import numpy as np
 # from resnet_model import ResnetModel
 
 
-@st.cache()
-def load_model(path: str = 'models/trained_model_resnet50.pt') -> ResnetModel:
-    """Retrieves the trained model and maps it to the CPU by default,
-    can also specify GPU here."""
-    model = ResnetModel(path_to_pretrained_model=path)
-    return model
+# @st.cache()
+# def load_model(path: str = 'models/trained_model_resnet50.pt') -> ResnetModel:
+#     """Retrieves the trained model and maps it to the CPU by default,
+#     can also specify GPU here."""
+#     model = ResnetModel(path_to_pretrained_model=path)
+#     return model
 
 
-@st.cache()
-def load_index_to_label_dict(
-        path: str = 'src/index_to_class_label.json'
-        ) -> dict:
-    """Retrieves and formats the
-    index to class label
-    lookup dictionary needed to
-    make sense of the predictions.
-    When loaded in, the keys are strings, this also
-    processes those keys to integers."""
-    with open(path, 'r') as f:
-        index_to_class_label_dict = json.load(f)
-    index_to_class_label_dict = {
-        int(k): v for k, v in index_to_class_label_dict.items()}
-    return index_to_class_label_dict
+# @st.cache()
+# def load_index_to_label_dict(
+#         path: str = 'src/index_to_class_label.json'
+#         ) -> dict:
+#     """Retrieves and formats the
+#     index to class label
+#     lookup dictionary needed to
+#     make sense of the predictions.
+#     When loaded in, the keys are strings, this also
+#     processes those keys to integers."""
+#     with open(path, 'r') as f:
+#         index_to_class_label_dict = json.load(f)
+#     index_to_class_label_dict = {
+#         int(k): v for k, v in index_to_class_label_dict.items()}
+#     return index_to_class_label_dict
 
 
-def load_files_from_s3(
-        keys: list,
-        bucket_name: str = 'bird-classification-bucket'
-        ) -> list:
-    """Retrieves files anonymously from my public S3 bucket"""
-    s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED))
-    s3_files = []
-    for key in keys:
-        s3_file_raw = s3.get_object(Bucket=bucket_name, Key=key)
-        s3_file_cleaned = s3_file_raw['Body'].read()
-        s3_file_image = Image.open(BytesIO(s3_file_cleaned))
-        s3_files.append(s3_file_image)
-    return s3_files
+# def load_files_from_s3(
+#         keys: list,
+#         bucket_name: str = 'bird-classification-bucket'
+#         ) -> list:
+#     """Retrieves files anonymously from my public S3 bucket"""
+#     s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED))
+#     s3_files = []
+#     for key in keys:
+#         s3_file_raw = s3.get_object(Bucket=bucket_name, Key=key)
+#         s3_file_cleaned = s3_file_raw['Body'].read()
+#         s3_file_image = Image.open(BytesIO(s3_file_cleaned))
+#         s3_files.append(s3_file_image)
+#     return s3_files
 
 
-@st.cache()
-def load_s3_file_structure(path: str = 'src/all_image_files.json') -> dict:
-    """Retrieves JSON document outining the S3 file structure"""
-    with open(path, 'r') as f:
-        return json.load(f)
+# @st.cache()
+# def load_s3_file_structure(path: str = 'src/all_image_files.json') -> dict:
+#     """Retrieves JSON document outining the S3 file structure"""
+#     with open(path, 'r') as f:
+#         return json.load(f)
 
 
-@st.cache()
-def load_list_of_images_available(
-        all_image_files: dict,
-        image_files_dtype: str,
-        bird_species: str
-        ) -> list:
-    """Retrieves list of available images given the current selections"""
-    species_dict = all_image_files.get(image_files_dtype)
-    list_of_files = species_dict.get(bird_species)
-    return list_of_files
+# @st.cache()
+# def load_list_of_images_available(
+#         all_image_files: dict,
+#         image_files_dtype: str,
+#         bird_species: str
+#         ) -> list:
+#     """Retrieves list of available images given the current selections"""
+#     species_dict = all_image_files.get(image_files_dtype)
+#     list_of_files = species_dict.get(bird_species)
+#     return list_of_files
 
 
-@st.cache()
-def predict(
-        img: Image.Image,
-        index_to_label_dict: dict,
-        model,
-        k: int
-        ) -> list:
-    """Transforming input image according to ImageNet paper
-    The Resnet was initially trained on ImageNet dataset
-    and because of the use of transfer learning, I froze all
-    weights and only learned weights on the final layer.
-    The weights of the first layer are still what was
-    used in the ImageNet paper and we need to process
-    the new images just like they did.
+# @st.cache()
+# def predict(
+#         img: Image.Image,
+#         index_to_label_dict: dict,
+#         model,
+#         k: int
+#         ) -> list:
+#     """Transforming input image according to ImageNet paper
+#     The Resnet was initially trained on ImageNet dataset
+#     and because of the use of transfer learning, I froze all
+#     weights and only learned weights on the final layer.
+#     The weights of the first layer are still what was
+#     used in the ImageNet paper and we need to process
+#     the new images just like they did.
 
-    This function transforms the image accordingly,
-    puts it to the necessary device (cpu by default here),
-    feeds the image through the model getting the output tensor,
-    converts that output tensor to probabilities using Softmax,
-    and then extracts and formats the top k predictions."""
-    formatted_predictions = model.predict_proba(img, k, index_to_label_dict)
-    return formatted_predictions
+#     This function transforms the image accordingly,
+#     puts it to the necessary device (cpu by default here),
+#     feeds the image through the model getting the output tensor,
+#     converts that output tensor to probabilities using Softmax,
+#     and then extracts and formats the top k predictions."""
+#     formatted_predictions = model.predict_proba(img, k, index_to_label_dict)
+#     return formatted_predictions
 
 
 if __name__ == '__main__':
