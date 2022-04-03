@@ -14,29 +14,29 @@ import numpy as np
 # from resnet_model import ResnetModel
 
 
-# @st.cache()
-# def load_model(path: str = 'models/trained_model_resnet50.pt') -> ResnetModel:
-#     """Retrieves the trained model and maps it to the CPU by default,
-#     can also specify GPU here."""
-#     model = ResnetModel(path_to_pretrained_model=path)
-#     return model
+@st.cache()
+def load_model(path: str = 'models/trained_model_resnet50.pt') -> ResnetModel:
+    """Retrieves the trained model and maps it to the CPU by default,
+    can also specify GPU here."""
+    model = ResnetModel(path_to_pretrained_model=path)
+    return model
 
 
-# @st.cache()
-# def load_index_to_label_dict(
-#         path: str = 'src/index_to_class_label.json'
-#         ) -> dict:
-#     """Retrieves and formats the
-#     index to class label
-#     lookup dictionary needed to
-#     make sense of the predictions.
-#     When loaded in, the keys are strings, this also
-#     processes those keys to integers."""
-#     with open(path, 'r') as f:
-#         index_to_class_label_dict = json.load(f)
-#     index_to_class_label_dict = {
-#         int(k): v for k, v in index_to_class_label_dict.items()}
-#     return index_to_class_label_dict
+@st.cache()
+def load_index_to_label_dict(
+        path: str = 'src/index_to_class_label.json'
+        ) -> dict:
+    """Retrieves and formats the
+    index to class label
+    lookup dictionary needed to
+    make sense of the predictions.
+    When loaded in, the keys are strings, this also
+    processes those keys to integers."""
+    with open(path, 'r') as f:
+        index_to_class_label_dict = json.load(f)
+    index_to_class_label_dict = {
+        int(k): v for k, v in index_to_class_label_dict.items()}
+    return index_to_class_label_dict
 
 
 # def load_files_from_s3(
@@ -54,11 +54,11 @@ import numpy as np
 #     return s3_files
 
 
-# @st.cache()
-# def load_s3_file_structure(path: str = 'src/all_image_files.json') -> dict:
-#     """Retrieves JSON document outining the S3 file structure"""
-#     with open(path, 'r') as f:
-#         return json.load(f)
+@st.cache()
+def load_s3_file_structure(path: str = 'src/all_image_files.json') -> dict:
+    """Retrieves JSON document outining the S3 file structure"""
+    with open(path, 'r') as f:
+        return json.load(f)
 
 
 # @st.cache()
@@ -73,36 +73,36 @@ import numpy as np
 #     return list_of_files
 
 
-# @st.cache()
-# def predict(
-#         img: Image.Image,
-#         index_to_label_dict: dict,
-#         model,
-#         k: int
-#         ) -> list:
-#     """Transforming input image according to ImageNet paper
-#     The Resnet was initially trained on ImageNet dataset
-#     and because of the use of transfer learning, I froze all
-#     weights and only learned weights on the final layer.
-#     The weights of the first layer are still what was
-#     used in the ImageNet paper and we need to process
-#     the new images just like they did.
+@st.cache()
+def predict(
+        img: Image.Image,
+        index_to_label_dict: dict,
+        model,
+        k: int
+        ) -> list:
+    """Transforming input image according to ImageNet paper
+    The Resnet was initially trained on ImageNet dataset
+    and because of the use of transfer learning, I froze all
+    weights and only learned weights on the final layer.
+    The weights of the first layer are still what was
+    used in the ImageNet paper and we need to process
+    the new images just like they did.
 
-#     This function transforms the image accordingly,
-#     puts it to the necessary device (cpu by default here),
-#     feeds the image through the model getting the output tensor,
-#     converts that output tensor to probabilities using Softmax,
-#     and then extracts and formats the top k predictions."""
-#     formatted_predictions = model.predict_proba(img, k, index_to_label_dict)
-#     return formatted_predictions
+    This function transforms the image accordingly,
+    puts it to the necessary device (cpu by default here),
+    feeds the image through the model getting the output tensor,
+    converts that output tensor to probabilities using Softmax,
+    and then extracts and formats the top k predictions."""
+    formatted_predictions = model.predict_proba(img, k, index_to_label_dict)
+    return formatted_predictions
 
 
 if __name__ == '__main__':
-#     model = load_model()
-#     index_to_class_label_dict = load_index_to_label_dict()
-#     all_image_files = load_s3_file_structure()
-#     types_of_birds = sorted(list(all_image_files['test'].keys()))
-#     types_of_birds = [bird.title() for bird in types_of_birds]
+    model = load_model()
+    index_to_class_label_dict = load_index_to_label_dict()
+    all_image_files = load_s3_file_structure()
+    types_of_birds = sorted(list(all_image_files['test'].keys()))
+    types_of_birds = [bird.title() for bird in types_of_birds]
 
     st.title('Welcome To Project Eagle Vision!')
     instructions = """
@@ -125,10 +125,10 @@ if __name__ == '__main__':
 
     if file:  # if user uploaded file
         img = Image.open(file)
-#         prediction = predict(img, index_to_class_label_dict, model, k=5)
-#         top_prediction = prediction[0][0]
-#         available_images = all_image_files.get(
-#             'train').get(top_prediction.upper())
+        prediction = predict(img, index_to_class_label_dict, model, k=5)
+        top_prediction = prediction[0][0]
+        available_images = all_image_files.get(
+            'train').get(top_prediction.upper())
 #         examples_of_species = np.random.choice(available_images, size=3)
 #         files_to_get_from_s3 = []
 
@@ -162,7 +162,7 @@ if __name__ == '__main__':
 #         img = images_from_s3.pop(0)
 #         prediction = predict(img, index_to_class_label_dict, model, 5)
 
-    st.title("Here is the image you've selected")
+#     st.title("Here is the image you've selected")
 #     resized_image = img.resize((336, 336))
 #     st.image(resized_image)
 #     st.title("Here are the five most likely bird species")
