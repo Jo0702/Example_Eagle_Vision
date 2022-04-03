@@ -121,7 +121,7 @@ if __name__ == '__main__':
         'Images Used To Tune The Model': 'valid',
         'Images The Model Has Never Seen': 'test'
     }
-    data_split_names = list(dtype_file_structure_mapping.keys())
+#     data_split_names = list(dtype_file_structure_mapping.keys())
 
 #     if file:  # if user uploaded file
 #         img = Image.open(file)
