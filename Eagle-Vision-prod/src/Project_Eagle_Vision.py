@@ -1,7 +1,7 @@
-# import json
-# from io import BytesIO
-# from PIL import Image
-# import os
+import json
+from io import BytesIO
+from PIL import Image
+import os
 
 # import boto3
 # from botocore import UNSIGNED  # contact public s3 buckets anonymously
